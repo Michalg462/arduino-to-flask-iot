@@ -1,4 +1,5 @@
 #include <LiquidCrystal.h>
+#include <TimerOne.h>
 #include "DHT.h"
 
 // LCD object creation
@@ -30,7 +31,7 @@ byte thermometer[8] ={
   B01100
 };
 
-byte humidity[8] = {
+byte drop[8] = {
   B00100,
   B00100,
   B01110,
@@ -41,6 +42,11 @@ byte humidity[8] = {
   B01110
 };
 
+// global variables
+
+float temperature = 0;
+int humidity = 0;
+
 
 void setup() {
   // LCD initialization
@@ -50,7 +56,7 @@ void setup() {
   // loading custom chars
   lcd.createChar(0, celcius);
   lcd.createChar(1, thermometer);
-  lcd.createChar(2, humidity);
+  lcd.createChar(2, drop);
 
   // Pin modes
   pinMode(A5, INPUT);
@@ -58,48 +64,47 @@ void setup() {
   // DHT setup
   dht.setup(2);
 
+  // Starting a timer for communication via Serial
+  Timer1.initialize(1000000);
+  Timer1.attachInterrupt(listen);
+
   // Serial monitor for debug 
   Serial.begin(9600);
-
-  // setup complete
-  lcd.setCursor(0,0);
-  lcd.print("Ready to go!");
-  delay(2000);
-  lcd.clear();
 }
 
 void loop() {
-  // Checks if there is something to read on a Serial
+  // measure the values of temperature and humidity
+  humidity = dht.getHumidity();
+
+  float volt = analogRead(A5);
+  temperature = volt/1023*5 * 100;
+
+  // Print the measured values on LCD screen
+  lcd.setCursor(0, 0);
+  lcd.write(1);
+  lcd.print(temperature);
+  lcd.write(byte(0));
+  lcd.print("C");
+
+  lcd.setCursor(0, 1);
+  lcd.write(2);
+  lcd.print(humidity);
+  lcd.print("%");
+  // The DHT11 allows for measurements every 1 second, but for now it will be enough to measure every 5 seconds 
+  delay(5000);
+}
+
+void listen(){
+   // Checks if there is something to read on a Serial
   if (Serial.available()) {
         String cmd = Serial.readStringUntil('\n');
 
         // When 'GET' command is sent, 
-        // read the data from sensors and send it back via Serial 
+        // send the current data to server
         if (cmd == "GET"){
-            int humi = dht.getHumidity();
-
-            float volt = analogRead(A5);
-            float temp = volt/1023*5 * 100;
-
-            // Additionally prints the measured values on LCD screen
-            lcd.setCursor(0, 0);
-            lcd.write(1);
-            lcd.print(temp);
-            lcd.write(byte(0));
-            lcd.print("C");
-
-            lcd.setCursor(0, 1);
-            lcd.write(2);
-            lcd.print(humi);
-            lcd.print("%");
-
-            Serial.print(temp);
+            Serial.print(temperature);
             Serial.print(";");
-            Serial.println(humi);
+            Serial.println(humidity);
         }
-
   }
-
-  // The DHT11 allows for measurements every 1 second, for safety let's delay this for two
-  delay(2);
 }
