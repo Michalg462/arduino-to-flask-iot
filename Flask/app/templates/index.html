@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %} Current weather {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h2> Temperature: {{ temperature }} ℃</h2>
+<h2> Humidity: {{ humidity }} %</h2>
+
+{% endblock %}
