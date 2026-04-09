@@ -70,11 +70,18 @@ void setup() {
 
   // Serial monitor for debug 
   Serial.begin(9600);
+
+  // waitng for the DHT11 to make a first reading 
+
+  delay(1100);
 }
 
 void loop() {
   // measure the values of temperature and humidity
   humidity = dht.getHumidity();
+
+  // delay for communication
+  delay(1100);
 
   float volt = analogRead(A5);
   temperature = volt/1023*5 * 100;
@@ -90,8 +97,9 @@ void loop() {
   lcd.write(2);
   lcd.print(humidity);
   lcd.print("%");
-  // The DHT11 allows for measurements every 1 second, but for now it will be enough to measure every 5 seconds 
-  delay(5000);
+  // The DHT11 allows for measurements every 1 second, but for now it will be enough to measure around every 5 seconds 
+  // (4 delay and 1 waiting for humidity sensor readings)
+  delay(4000);
 }
 
 void listen(){
