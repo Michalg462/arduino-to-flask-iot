@@ -1,13 +1,17 @@
-from idlelib.sidebar import temp_enable_text_widget
-
 from flask import (
     Blueprint, render_template
 )
+from app.data_storage import data_store
 
+# definition of a blueprint object
 bp = Blueprint("landing", __name__)
 
+# defining the route on which the blueprint should be rendered
 @bp.route('/')
 def index():
-    temperature = 25
-    humidity = 15
+    data = data_store.get()
+    print(str(data))
+    temperature = data.get('temperature')
+    humidity = data.get('humidity')
+
     return render_template('index.html', temperature=temperature, humidity=humidity)
