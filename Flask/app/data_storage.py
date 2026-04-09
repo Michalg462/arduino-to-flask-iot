@@ -35,7 +35,6 @@ def read_parameters():
         command = 'GET\n'
         ser.write(command.encode())
         response =ser.readline().decode('utf-8', errors='ignore').strip()
-        print(response)
         if response:
             readings = response.split(';')
             data_store.update(temperature=readings[0], humidity=readings[1])

@@ -10,7 +10,6 @@ bp = Blueprint("landing", __name__)
 @bp.route('/')
 def index():
     data = data_store.get()
-    print(str(data))
     temperature = data.get('temperature')
     humidity = data.get('humidity')
 
