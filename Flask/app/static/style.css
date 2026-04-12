@@ -1,0 +1,47 @@
+/* Global layout */
+body {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f5f5f5;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+/* Typography */
+h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(32px, 5vw, 48px);
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-family: Georgia, serif;
+    font-size: clamp(24px, 4vw, 32px);
+    margin-top: 20px;
+}
+
+/* Content container */
+.content {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .content {
+        padding: 16px;
+    }
+}
