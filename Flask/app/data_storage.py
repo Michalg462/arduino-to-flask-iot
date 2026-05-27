@@ -28,13 +28,16 @@ class DataStorage:
 # creating a shared instance of the class
 data_store = DataStorage()
 
-
+# This function is used to auto-detect connected arduino boards
 def detect_arduino():
+
+    # gets the list of available ports, throws runtime error if none found
     try:
         ports = list_ports.comports()
     except Exception as e:
         raise RuntimeError(f"No arduino port found: {e}")
 
+    # for every available port load it's data and compare it with given keywords
     for port in ports:
         desc = (port.description or "").lower()
         hwid = (port.hwid or "").lower()
@@ -50,10 +53,12 @@ def detect_arduino():
             "nano"
         ]
 
+        # if the port data matches key word, return it as a connection port
         for phrase in search_phrase:
             if (phrase in desc) or (phrase in hwid):
                 return port
 
+    # If no matching port has beed found, throw runtime error
     raise RuntimeError("No arduino port found")
 
 
